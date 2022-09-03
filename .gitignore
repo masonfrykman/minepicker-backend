@@ -1,0 +1,9 @@
+build/
+
+windows/
+macos/
+linux/
+ios/
+android/
+
+env/
