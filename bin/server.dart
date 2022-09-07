@@ -8,6 +8,7 @@ import 'package:shelf_router/shelf_router.dart';
 import 'Classes/advert_mgr.dart';
 import 'Handlers/backend_mgmt.dart';
 import 'Handlers/features.dart';
+import 'Handlers/file_browse.dart';
 import 'Handlers/frontend_auth.dart';
 import 'Handlers/instance_backend.dart';
 import 'Handlers/instance_create_delete.dart';
@@ -55,6 +56,11 @@ final _router = Router(notFoundHandler: notFoundHandler)
   ..post('/instance/<uuid>/sdp/refresh', refreshServerProperties)
   ..put('/instance/<uuid>/sdp/addMixin', addServerPropertiesMixin)
   ..delete("/instance/<uuid>/sdp/removeMixin", removeServerPropertiesMixin)
+  // FILE MGMT
+  ..get('/instance/<uuid>/fm/<path|.*>', fmAccessGet)
+  ..head('/instance/<uuid>/fm/<path|.*>', fmAccessHead)
+  ..put('/instance/<uuid>/fm/<path|.*>', fmAccessPut)
+  ..delete('/instance/<uuid>/fm/<path|.*>', fmAccessDelete)
   // INSTANCE BACKEND MGMT
   ..get('/versionctrl/list',
       listMCVersionsCached) // Gets all release versions of MC.
