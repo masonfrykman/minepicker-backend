@@ -5,7 +5,6 @@ import 'package:shelf/shelf.dart';
 import '../Classes/instances.dart';
 import '../Classes/world.dart';
 import '../Classes/worldprocessmgr.dart';
-import '../Helpers/authentication.dart';
 import '../Helpers/http_body_to_map.dart';
 
 Future<Response> startJavaGameHandler(Request req, String uuid) async {
@@ -110,20 +109,6 @@ Response getPort(Request req, String uuid) {
   }
   return Response.ok("${world.processManager.runningAt}");
 }
-/*
-Response getStdoutSocketAddressOfUUID(Request req, String uuid) {
-  final world = InstanceManager.shared.getWorldByUUID(uuid);
-  if (world == null) {
-    return Response.notFound("Failed to find world with uuid '$uuid'.");
-  }
-
-  final addr = world.processManager.stdoutSocketIPPortPair;
-  if (addr == null) {
-    return Response.notFound("Socket does not exist.");
-  }
-  return Response.ok(addr);
-}
-*/
 
 Response resetState(Request req, String uuid) {
   final world = InstanceManager.shared.getWorldByUUID(uuid);

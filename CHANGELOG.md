@@ -1,5 +1,12 @@
 # Minepicker Backend changelog.
 
+## ESPRESSO with MOCHA SWIRL
+
+COMPATIBILITY: tbd
+
+- Added locked-down file management.
+- Cached versions list now refreshes every 3 days.
+
 ## ESPRESSO with HAZELNUT
 
 COMPATIBILITY: SIMBA patch 3 - NALA patch 1

@@ -7,3 +7,5 @@ ios/
 android/
 
 env/
+
+.DS_Store

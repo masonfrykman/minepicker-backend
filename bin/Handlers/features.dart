@@ -9,11 +9,6 @@ Response queryFeatureAvailability(Request req, String feature) {
         return Response.ok("false");
       }
       return Response.ok("true");
-    case "advertiseserver":
-      if (config["AdvertiseServerOverLAN"] != "true") {
-        return Response.ok("false");
-      }
-      return Response.ok("true");
   }
   return Response.notFound("Unknown feature '$feature'.");
 }

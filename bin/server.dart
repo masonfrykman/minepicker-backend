@@ -6,7 +6,7 @@ import 'package:shelf_router/shelf_router.dart';
 
 //import 'Classes/instances.dart';
 import 'Classes/advert_mgr.dart';
-import 'Handlers/backend_mgmt.dart';
+import 'Helpers/mojang_versions_getter.dart';
 import 'Handlers/features.dart';
 import 'Handlers/file_browse.dart';
 import 'Handlers/frontend_auth.dart';
@@ -19,7 +19,7 @@ import 'Handlers/instance_server_dot_properties.dart';
 import 'Handlers/version.dart';
 import 'Helpers/authentication.dart';
 import 'Helpers/config.dart';
-import 'Helpers/restart_server.dart';
+import 'Helpers/long_term_timers.dart';
 
 // Configure routes.
 final _router = Router(notFoundHandler: notFoundHandler)
@@ -84,10 +84,14 @@ Response notFoundHandler(Request req) {
 }
 
 void main(List<String> args) async {
+  print("\n\n\nMinepicker Server version $versionName");
+  print(versionDate);
+  print("Compatible with clients $versionCompatibility\n\n\n");
   // EULA
   print(
       "Use of this software implies agreement to the Minecraft EULA (https://www.minecraft.net/en-us/eula)");
-  print("DISCONTINUE USE OF THIS SOFTWARE IF YOU DO NOT AGREE WITH THE EULA.");
+  print(
+      "DISCONTINUE USE OF THIS SOFTWARE IF YOU DO NOT AGREE WITH THE EULA.\n\n");
 
   // Handle config stuff.
   await reloadConfig();
@@ -136,21 +140,12 @@ void main(List<String> args) async {
     },
   );
 
-  final serverDownMW = createMiddleware(requestHandler: (Request request) {
-    if (willServerRestart()) {
-      return Response(503, body: "Server is restarting.");
-    }
-  });
-
-  print(getAccountsDBFilePath());
+  getAccountsDBFilePath();
 
   final handler = Pipeline()
       .addMiddleware(logRequests())
-      .addMiddleware(serverDownMW)
       .addMiddleware(authMW)
       .addHandler(_router);
-
-  print(await checkBackendServiceExistance());
 
   MulticastAdvertManager.shared.start();
 
@@ -159,4 +154,6 @@ void main(List<String> args) async {
   final server = await serve(handler, ip, port);
   print(
       'Server listening at address ${server.address.address} on port ${server.port}');
+
+  registerLongTermTimers();
 }

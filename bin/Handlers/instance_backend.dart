@@ -2,9 +2,7 @@ import 'package:shelf/shelf.dart';
 
 import 'dart:io';
 
-import '../Helpers/authentication.dart';
 import '../Helpers/config.dart';
-import '../Helpers/http_body_to_map.dart';
 import '../Helpers/instance_caching.dart';
 import '../Helpers/mojang_versions_getter.dart';
 

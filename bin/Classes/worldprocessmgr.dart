@@ -2,12 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 
-import '../Helpers/embedded_lan_advertise.dart';
-import '../Helpers/sockets_ports.dart';
 import 'advert_mgr.dart';
 import 'instances.dart';
 import 'world.dart';
-import 'stdout_socket_sub.dart';
 import '../Helpers/config.dart';
 
 class WorldProcessManager {
@@ -83,51 +80,11 @@ class WorldProcessManager {
       timer.cancel();
     });
 
-    // TODO: await makeStdoutSocket();
-
     if (wantsAdvert) {
       advertise();
     }
   }
 
-  /*
-  Future<void> makeStdoutSocket() async {
-    var getPort = getRandomSocketsPort();
-    if (getPort == null) {
-      return;
-    }
-
-    procSocket = await ServerSocket.bind(
-        InternetAddress(config["BindAddress"]!), getPort);
-    connectedStdoutSockets = [];
-    procSocket!.listen((Socket newSocket) {
-      print("NEW SOCKET!");
-      if (connectedStdoutSockets == null) {
-        return;
-      }
-      connectedStdoutSockets!.add(AuthenticatedSocket(newSocket, this));
-    });
-
-    print(procSocket!.address);
-  }
-
-  String? get stdoutSocketIPPortPair {
-    if (procSocket == null) {
-      return null;
-    }
-    return "${procSocket!.address.address}:${procSocket!.port}";
-  }
-
-  void stdoutSocketHasFinished(AuthenticatedSocket socket) {
-    if (connectedStdoutSockets != null) {
-      for (AuthenticatedSocket sock in connectedStdoutSockets!) {
-        if (sock == socket) {
-          connectedStdoutSockets!.remove(sock);
-        }
-      }
-    }
-  }
-  */
   Future<void> stop() async {
     if (process == null) {
       return;
@@ -181,13 +138,6 @@ class WorldProcessManager {
 
   void _processProcessOutput(String ln) {
     print("PROCESSING THREAD: $ln");
-    /*
-    if (connectedStdoutSockets != null) {
-      for (AuthenticatedSocket sock in connectedStdoutSockets!) {
-        sock.sendIfAuthenticated(ln);
-      }
-    }
-*/
     if (ln.contains("<") && ln.contains(">")) {
       return;
     }

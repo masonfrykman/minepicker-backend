@@ -4,7 +4,6 @@ import 'package:shelf/shelf.dart';
 
 import '../Classes/instances.dart';
 import '../Classes/world.dart';
-import '../Helpers/authentication.dart';
 import '../Helpers/http_body_to_map.dart';
 import '../Helpers/instance_caching.dart';
 

@@ -6,8 +6,6 @@ import 'world.dart';
 
 import 'dart:io';
 
-import 'worldprocessmgr.dart';
-
 class InstanceManager {
   final List<World> _worlds = [];
   final List<World> _trash =
