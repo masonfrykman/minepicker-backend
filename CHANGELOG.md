@@ -5,6 +5,7 @@
 COMPATIBILITY: tbd
 
 - Added locked-down file management.
+- Server now gracefully exits & saves the manifest on SIGINT & SIGTERM.
 - Cached versions list now refreshes every 3 days.
 
 ## ESPRESSO with HAZELNUT

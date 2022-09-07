@@ -20,6 +20,7 @@ import 'Handlers/version.dart';
 import 'Helpers/authentication.dart';
 import 'Helpers/config.dart';
 import 'Helpers/long_term_timers.dart';
+import 'Helpers/process_signals.dart';
 
 // Configure routes.
 final _router = Router(notFoundHandler: notFoundHandler)
@@ -156,4 +157,5 @@ void main(List<String> args) async {
       'Server listening at address ${server.address.address} on port ${server.port}');
 
   registerLongTermTimers();
+  registerSignalListeners();
 }
