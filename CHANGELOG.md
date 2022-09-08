@@ -7,25 +7,32 @@ COMPATIBILITY: tbd
 - Added locked-down file management.
 - Server now gracefully exits & saves the manifest on SIGINT & SIGTERM.
 - Cached versions list now refreshes every 3 days.
+- Combined unauth & auth instance info handler into /instance/<uuid>/info.
 
 ## ESPRESSO with HAZELNUT
 
 COMPATIBILITY: SIMBA patch 3 - NALA patch 1
 
-- Advertise server via Multicast for quick joining in Minecraft.
+SUMMARY: Not everyone wants to type.
+
+- Advertise server via Multicast for quick joining in Minecraft. (Requires NALA patch 1)
 - Query features of the server.
 
 ## ESPRESSO with CARAMEL
 
 COMPATIBILITY: SIMBA patch 3 - SIMBA patch 4
 
-- Added setting an optional static port outside the dynamic range. Must be toggled with a try-static=true value while sending a start request.
+SUMMARY: Not everyone wants to type a new port number every time.
+
+- Added setting an optional static port outside the dynamic range. Must be toggled with a try-static=true value while sending a start request. (Requires SIMBA patch 4)
 - Fixed port not releasing when instance stops
 - Under the hood improvements.
 
 ## ESPRESSO with VANILLA
 
 COMPATIBILITY: SIMBA patch 3
+
+SUMMARY: Mostly bug fixes but adds a small, yet useful feature of random port assignment.
 
 - Checks to make sure an account is in the db.
 - Added handler for SIGKILL-ing a server process.
@@ -39,6 +46,8 @@ COMPATIBILITY: SIMBA patch 3
 ## AMERICANO with CARAMEL
 
 COMPATIBILITY: SIMBA patch 1 - SIMBA patch 2
+
+SUMMARY: Small update to fix issues with intial release.
 
 - Added handler to get server.properties mixins.
 - Added Date handler.

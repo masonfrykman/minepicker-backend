@@ -12,8 +12,7 @@ import 'Handlers/file_browse.dart';
 import 'Handlers/frontend_auth.dart';
 import 'Handlers/instance_backend.dart';
 import 'Handlers/instance_create_delete.dart';
-import 'Handlers/instance_handlers_auth.dart';
-import 'Handlers/instance_handlers_noauth.dart';
+import 'Handlers/instance_information.dart';
 import 'Handlers/instance_process.dart';
 import 'Handlers/instance_server_dot_properties.dart';
 import 'Handlers/version.dart';
@@ -35,9 +34,7 @@ final _router = Router(notFoundHandler: notFoundHandler)
   ..post('/instance/manifest/save', dumpManifestHandler)
   ..post('/instance/resetAllStates', resetAllStates)
   ..get('/instance/<uuid>/name', instanceUUIDName) // Just returns name
-  ..get('/instance/<uuid>/all/public', allUnauthFieldsUUID) // All public params
-  ..get('/instance/<uuid>/all/authenticated',
-      allFieldsByUUID) // Public + private params
+  ..get('/instance/<uuid>/info', allFieldsByUUID) // Public + private params
   ..delete('/instance/<uuid>/trash', trashInstance) // Trash an instance
   ..post('/instance/<uuid>/restore', restoreInstanceHandler) // Restore < trash
   ..put('/instance/new', createInstance) // Submit instance data for creation
@@ -141,11 +138,22 @@ void main(List<String> args) async {
     },
   );
 
+  // Clinging onto backwards compatibility rn
+  final backwardsCompatibilityMW =
+      createMiddleware(requestHandler: (Request request) {
+    if (request.handlerPath.startsWith("instance/") &&
+        request.handlerPath.endsWith("all/authenticated") &&
+        request.params['uuid'] != null) {
+      return allFieldsByUUID(request, request.params['uuid']!);
+    }
+  });
+
   getAccountsDBFilePath();
 
   final handler = Pipeline()
       .addMiddleware(logRequests())
       .addMiddleware(authMW)
+      .addMiddleware(backwardsCompatibilityMW)
       .addHandler(_router);
 
   MulticastAdvertManager.shared.start();
