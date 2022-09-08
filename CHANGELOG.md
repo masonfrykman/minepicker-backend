@@ -1,10 +1,10 @@
 # Minepicker Backend changelog.
 
-## ESPRESSO with MOCHA SWIRL
+## CORTADO with VANILLA
 
 COMPATIBILITY: tbd
 
-- Added locked-down file management.
+- Added locked-down file management. (Requres NALA patch 2)
 - Server now gracefully exits & saves the manifest on SIGINT & SIGTERM.
 - Cached versions list now refreshes every 3 days.
 - Combined unauth & auth instance info handler into /instance/<uuid>/info.

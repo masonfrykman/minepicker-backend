@@ -1,6 +1,6 @@
 import 'package:shelf/shelf.dart';
 
-const versionName = "ESPRESSO with MOCHA SWIRL";
+const versionName = "CORTADO with VANILLA";
 const versionDate = "In Development";
 const versionCompatibility = "SIMBA patch 3 - NALA patch 1";
 
