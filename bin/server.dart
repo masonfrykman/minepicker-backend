@@ -114,10 +114,15 @@ void main(List<String> args) async {
   //await refreshMojangMCVersionsList(); // Refresh mojang versions.
   safelyPrintNewCredentialsIfTableEmpty();
 
+  print(
+      "\nScanning & (potentially) migrating passwords from plaintext to hash.");
+  print(
+      "This might take a while depending on the system & amount of accounts.\n");
+  migrate();
+
   final authMW = createMiddleware(
     requestHandler: (Request request) {
-      if (request.url.path == "account/new" ||
-          request.url.path == "account/changePassword" ||
+      if (request.url.path == "account/changePassword" ||
           request.url.path == "account/check" ||
           request.url.path.startsWith("version")) {
         // Allow SOME account stuff w/o this.

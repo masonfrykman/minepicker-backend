@@ -56,6 +56,12 @@
       "languageVersion": "2.14"
     },
     {
+      "name": "dbcrypt",
+      "rootUri": "file:///Users/mason/.pub-cache/hosted/pub.dartlang.org/dbcrypt-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "ffi",
       "rootUri": "file:///Users/mason/.pub-cache/hosted/pub.dartlang.org/ffi-2.0.1",
       "packageUri": "lib/",
@@ -320,7 +326,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2022-09-08T01:26:26.474728Z",
+  "generated": "2022-09-08T14:52:56.694997Z",
   "generator": "pub",
   "generatorVersion": "2.18.0"
 }

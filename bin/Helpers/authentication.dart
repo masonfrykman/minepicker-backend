@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:dbcrypt/dbcrypt.dart';
 import 'package:sqlite3/sqlite3.dart';
 
 import 'config.dart';
@@ -18,7 +19,7 @@ String getAccountsDBFilePath() {
 }
 
 bool authenticateUser(String username, String password) {
-  print("USER AUTH: $username; [redacted pwd]");
+  print("USER AUTH: $username;");
   if (username.trim().isEmpty || password.trim().isEmpty) {
     return false;
   }
@@ -35,24 +36,31 @@ bool authenticateUser(String username, String password) {
 
   db.dispose();
   dbchck.dispose();
-  if (selectExec.first["password"] == password) {
+  if (DBCrypt().checkpw(
+      password, selectExec.first["password"].toString().split("::").last)) {
     return true;
   }
   return false;
 }
 
 bool createUser(String username, String password) {
-  print("New User Creation Attempt: $username; $password");
+  print("New User Creation Attempt: $username");
   if (username.trim().isEmpty || password.trim().isEmpty) {
     return false;
   }
+
+  // hash the password.
+  final salt = DBCrypt().gensalt();
+  final hash = DBCrypt().hashpw(password, salt);
+
+  final hashfin = "dbhash::$hash";
 
   final db = sqlite3.open(getAccountsDBFilePath());
 
   final dbfllr =
       db.prepare("INSERT INTO accounts (username, password) VALUES (?, ?)");
 
-  dbfllr.execute([username, password]);
+  dbfllr.execute([username, hashfin]);
 
   dbfllr.dispose();
 
@@ -83,7 +91,6 @@ bool deleteUser(String username) {
 
 bool changePassword(String username, String oldPassword, String newPassword) {
   print("CHANGE PASSWORD ATTEMPT: $username");
-  print("$oldPassword");
 
   if (username.trim().isEmpty ||
       oldPassword.trim().isEmpty ||
@@ -96,17 +103,31 @@ bool changePassword(String username, String oldPassword, String newPassword) {
   final dbfllr = db.prepare("SELECT * FROM accounts WHERE username = ?");
 
   final selection = dbfllr.select([username]);
-
-  if (selection.first["password"] != oldPassword) {
-    print("Incorrect.");
-    return false;
+  if (!selection.first['password'].toString().startsWith("dbhash::")) {
+    if (selection.first["password"] != oldPassword) {
+      print("Incorrect.");
+      return false;
+    }
+  } else {
+    if (!DBCrypt().checkpw(oldPassword, selection.first['password'])) {
+      print("Incorrect.");
+      return false;
+    }
   }
+
+  // Hash new password
+
+  final salt = DBCrypt().gensalt();
+  final hash = DBCrypt().hashpw(selection.first['password'], salt);
+
+  final hashfin = "dbhash::$hash";
 
   final dbfllr2 =
       db.prepare("REPLACE INTO accounts (username, password) VALUES (?, ?)");
 
-  dbfllr2.execute([username, newPassword]);
+  dbfllr2.execute([username, hashfin]);
 
+  dbfllr2.dispose();
   dbfllr.dispose();
   db.dispose();
   return true;
@@ -156,4 +177,24 @@ void safelyPrintNewCredentialsIfTableEmpty() {
     print("Username: unsafeTemporaryAccountReplaceMe");
     print("Password: $rng");
   }
+}
+
+bool migrate() {
+  final db = sqlite3.open(getAccountsDBFilePath());
+
+  final dbfllr = db.prepare("SELECT * FROM accounts");
+
+  final selection = dbfllr.select();
+
+  for (var account in selection) {
+    if (!account['password'].toString().startsWith("dbhash::")) {
+      changePassword(
+          account['username'], account['password'], account['password']);
+    }
+  }
+
+  dbfllr.dispose();
+  db.dispose();
+
+  return true;
 }

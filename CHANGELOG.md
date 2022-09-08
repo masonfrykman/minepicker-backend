@@ -8,6 +8,8 @@ COMPATIBILITY: tbd
 - Server now gracefully exits & saves the manifest on SIGINT & SIGTERM.
 - Cached versions list now refreshes every 3 days.
 - Combined unauth & auth instance info handler into /instance/<uuid>/info.
+- Passwords are now stored hashed & automatically migrates the database on start.
+- Fixed account creation without a previous username & password
 
 ## ESPRESSO with HAZELNUT
 
