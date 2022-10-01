@@ -1,6 +1,6 @@
 # Minepicker Backend changelog.
 
-## CORTADO with VANILLA
+## 1.1.0
 
 COMPATIBILITY: tbd
 
@@ -11,18 +11,18 @@ COMPATIBILITY: tbd
 - Passwords are now stored hashed & automatically migrates the database on start.
 - Fixed account creation without a previous username & password
 
-## ESPRESSO with HAZELNUT
+## 1.0.4
 
-COMPATIBILITY: SIMBA patch 3 - NALA patch 1
+COMPATIBILITY: 1.0.2 - 1.1.0
 
 SUMMARY: Not everyone wants to type.
 
 - Advertise server via Multicast for quick joining in Minecraft. (Requires NALA patch 1)
 - Query features of the server.
 
-## ESPRESSO with CARAMEL
+## 1.0.3
 
-COMPATIBILITY: SIMBA patch 3 - SIMBA patch 4
+COMPATIBILITY: 1.0.2 - 1.0.3
 
 SUMMARY: Not everyone wants to type a new port number every time.
 
@@ -30,9 +30,9 @@ SUMMARY: Not everyone wants to type a new port number every time.
 - Fixed port not releasing when instance stops
 - Under the hood improvements.
 
-## ESPRESSO with VANILLA
+## 1.0.2
 
-COMPATIBILITY: SIMBA patch 3
+COMPATIBILITY: 1.0.2
 
 SUMMARY: Mostly bug fixes but adds a small, yet useful feature of random port assignment.
 
@@ -45,17 +45,17 @@ SUMMARY: Mostly bug fixes but adds a small, yet useful feature of random port as
 - Fixed player list not clearing when server closes with player still in game.
 
 
-## AMERICANO with CARAMEL
+## 1.0.1
 
-COMPATIBILITY: SIMBA patch 1 - SIMBA patch 2
+COMPATIBILITY: 1.0.0 - 1.0.1
 
 SUMMARY: Small update to fix issues with intial release.
 
 - Added handler to get server.properties mixins.
 - Added Date handler.
 
-## AMERICANO with VANILLA
+## 1.0.0
 
-COMPATIBILITY: SIMBA patch 1
+COMPATIBILITY: 1.0.0
 
 - Initial version.
