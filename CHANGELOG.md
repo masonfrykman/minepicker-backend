@@ -4,7 +4,7 @@
 
 COMPATIBILITY: tbd
 
-- Added locked-down file management. (Requres NALA patch 2)
+- Added locked-down file management. (Requires 1.1.1)
 - Server now gracefully exits & saves the manifest on SIGINT & SIGTERM.
 - Cached versions list now refreshes every 3 days.
 - Combined unauth & auth instance info handler into /instance/<uuid>/info.
@@ -17,7 +17,7 @@ COMPATIBILITY: 1.0.2 - 1.1.0
 
 SUMMARY: Not everyone wants to type.
 
-- Advertise server via Multicast for quick joining in Minecraft. (Requires NALA patch 1)
+- Advertise server via Multicast for quick joining in Minecraft. (Requires 1.1.0)
 - Query features of the server.
 
 ## 1.0.3
@@ -26,7 +26,7 @@ COMPATIBILITY: 1.0.2 - 1.0.3
 
 SUMMARY: Not everyone wants to type a new port number every time.
 
-- Added setting an optional static port outside the dynamic range. Must be toggled with a try-static=true value while sending a start request. (Requires SIMBA patch 4)
+- Added setting an optional static port outside the dynamic range. Must be toggled with a try-static=true value while sending a start request. (Requires 1.0.3)
 - Fixed port not releasing when instance stops
 - Under the hood improvements.
 
