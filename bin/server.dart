@@ -146,7 +146,6 @@ void main(List<String> args) async {
   // Clinging onto backwards compatibility rn
   final backwardsCompatibilityMW =
       createMiddleware(requestHandler: (Request request) {
-    print(request.url.path);
     if (request.url.path.startsWith("instance/") &&
         request.url.path.endsWith("all/authenticated")) {
       return allFieldsByUUID(request, request.url.path.split("/")[1]);

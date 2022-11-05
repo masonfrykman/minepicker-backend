@@ -27,14 +27,33 @@ Future<Response> fmAccessGet(Request req, String uuid, String path) async {
     final contents = await requestedFile.readAsBytes();
     return Response.ok(contents, headers: {"X-FileType": "file"});
   } else {
-    final lister = await listDirectory(path, uuid);
-    if (lister == null) {
-      print("ugh");
-      return Response.notFound("$path could not be found on the server.");
-    }
+    if (req.headers["x-dl"] != "true") {
+      final fpath = path.replaceAll("..", "");
+      final lister = await listDirectory(fpath, uuid);
+      if (lister == null) {
+        print("ugh");
+        return Response.notFound("$path could not be found on the server.");
+      }
 
-    return Response.ok(JsonEncoder().convert(lister),
-        headers: {"X-FileType": "directory"});
+      return Response.ok(JsonEncoder().convert(lister),
+          headers: {"X-FileType": "directory"});
+    } else {
+      final fpath = path.replaceAll("..", "");
+      final requestedPath =
+          "${config['RootMinecraftDirectory']}instances/$uuid/$fpath";
+
+      var tarringCmd =
+          await Process.run("tar", ["--to-stdout", "-zcv", requestedPath]);
+
+      if (tarringCmd.exitCode == 0) {
+        return Response.ok(tarringCmd.stdout, headers: {
+          "Content-Type": "application/tar+gzip",
+          "X-FileType": "file"
+        });
+      }
+      return Response.internalServerError(
+          body: "Failed to tarball the directory contents.");
+    }
   }
 }
 
