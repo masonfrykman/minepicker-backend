@@ -1,25 +1,8 @@
-# Todo
+# Todo (before 1.1.0 release)
 
-### Instances
-[X] Create Instance
-[X] Instance caching
-    [X] Force cache
-    [X] Delete cache
-[X] Edit Instance Properties
-[X] Delete Instance
-    [X] Remove during manifest dump.
-[X] Restore Instance
-
-### Account Mgmt
-[X] Check credentials
-[X] Create new account
-[X] Delete account
-[X] Change account password
-
-### Game
-[X] Run instance
-[X] Stop running instance
-[X] Send command w/ a request
-[X] Instance states
-[X] Edit server.properties thru requests
-[X] Edit whitelist/blacklist
+[ ] Add some more account features
+    - [ ] Instance access control
+    - [ ] Custom ordering of instances by account
+[ ] Socket stuff
+    - [ ] Open a socket for world STDOUT when instance starts
+    - [ ] Make a socket for server events (ex. shutting down)
