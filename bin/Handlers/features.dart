@@ -1,6 +1,7 @@
 import 'package:shelf/shelf.dart';
 
 import '../Helpers/config.dart';
+import '../Helpers/sockets.dart';
 
 Response queryFeatureAvailability(Request req, String feature) {
   switch (feature) {
@@ -9,6 +10,11 @@ Response queryFeatureAvailability(Request req, String feature) {
         return Response.ok("false");
       }
       return Response.ok("true");
+    case "sockets":
+      if (informationalSocketsAreAvaliable()) {
+        return Response.ok("true");
+      }
+      return Response.ok("false");
   }
   return Response.notFound("Unknown feature '$feature'.");
 }

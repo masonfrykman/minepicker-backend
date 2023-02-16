@@ -95,7 +95,7 @@ void main(List<String> args) async {
   await reloadConfig();
 
   if (config.isEmpty) {
-    stderr.write("FATAL ERROR: Failed to load config.");
+    stderr.write("FATAL ERROR: Failed to load config.\n");
     await stderr.flush();
     return;
   }
@@ -120,6 +120,8 @@ void main(List<String> args) async {
       "This might take a while depending on the system & amount of accounts.\n");
   migrate();
 
+  // Catch-all authentication middleware
+  // instead of replicating it in EVERY handler.
   final authMW = createMiddleware(
     requestHandler: (Request request) {
       if (request.url.path == "account/changePassword" ||

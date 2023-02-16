@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import '../Helpers/config.dart';
+import '../Helpers/sockets.dart';
 import 'world.dart';
 
 import 'dart:io';
@@ -58,15 +59,6 @@ class InstanceManager {
     return _portMax - mx;
   }
 
-  bool _portOpen(int port) {
-    final ptp =
-        Process.runSync("nc", ["-z", config["BindAddress"]!, port.toString()]);
-    if (ptp.exitCode == 0) {
-      return true;
-    }
-    return false;
-  }
-
   bool registerIfPortAvaliable(int port, World world) {
     if (portTest(port)) {
       usingPort.addAll({port: world});
@@ -76,7 +68,7 @@ class InstanceManager {
   }
 
   bool portTest(int port) {
-    if (!_portOpen(port)) {
+    if (!portOpen(port)) {
       return true;
     }
     return false;
