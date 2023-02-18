@@ -22,7 +22,7 @@ import 'Helpers/config.dart';
 import 'Helpers/long_term_timers.dart';
 import 'Helpers/process_signals.dart';
 import 'Helpers/sockets/sockets.dart';
-import 'Helpers/sockets/static_sockets.dart';
+import 'Helpers/sockets/server_status_socket.dart';
 
 // Configure routes.
 final _router = Router(notFoundHandler: notFoundHandler)
