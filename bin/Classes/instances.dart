@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import '../Helpers/config.dart';
-import '../Helpers/sockets.dart';
+import '../Helpers/sockets/sockets.dart';
 import 'world.dart';
 
 import 'dart:io';

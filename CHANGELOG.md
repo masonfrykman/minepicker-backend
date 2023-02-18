@@ -10,6 +10,7 @@ COMPATIBILITY: tbd
 - Combined unauth & auth instance info handler into /instance/<uuid>/info.
 - Passwords are now stored hashed & automatically migrates the database on start.
 - Fixed account creation without a previous username & password
+- Fixed issues relating to incorrect interpretation of port tester's exit code.
 
 ## 1.0.4
 

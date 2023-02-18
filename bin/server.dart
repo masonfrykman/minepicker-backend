@@ -6,6 +6,7 @@ import 'package:shelf_router/shelf_router.dart';
 
 //import 'Classes/instances.dart';
 import 'Classes/advert_mgr.dart';
+import 'Classes/socket_serv_mgr.dart';
 import 'Helpers/mojang_versions_getter.dart';
 import 'Handlers/features.dart';
 import 'Handlers/file_browse.dart';
@@ -20,6 +21,8 @@ import 'Helpers/authentication.dart';
 import 'Helpers/config.dart';
 import 'Helpers/long_term_timers.dart';
 import 'Helpers/process_signals.dart';
+import 'Helpers/sockets/sockets.dart';
+import 'Helpers/sockets/static_sockets.dart';
 
 // Configure routes.
 final _router = Router(notFoundHandler: notFoundHandler)
@@ -172,4 +175,18 @@ void main(List<String> args) async {
 
   registerLongTermTimers();
   registerSignalListeners();
+
+  print("\n\nOpening server status port...");
+  final assignedServerSocket = await getOpenSocket();
+  if (assignedServerSocket != null) {
+    serverStatusSocket = SocketServerManager(assignedServerSocket);
+    serverStatusSocket!.start();
+    print(
+        "Done! Running at ${assignedServerSocket.address.address}:${assignedServerSocket.port}");
+    serverStatusSocket!.consumerInputProcessor = (List<int> msg) {
+      print(msg);
+    };
+  } else {
+    print("Something went wrong getting an avaliable socket!");
+  }
 }

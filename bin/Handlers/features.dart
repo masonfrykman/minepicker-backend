@@ -1,7 +1,7 @@
 import 'package:shelf/shelf.dart';
 
 import '../Helpers/config.dart';
-import '../Helpers/sockets.dart';
+import '../Helpers/sockets/sockets.dart';
 
 Response queryFeatureAvailability(Request req, String feature) {
   switch (feature) {

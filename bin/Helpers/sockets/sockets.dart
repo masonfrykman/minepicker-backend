@@ -1,4 +1,6 @@
-import 'config.dart';
+import 'dart:convert';
+
+import '../config.dart';
 
 import 'dart:io';
 import 'dart:math';
@@ -7,12 +9,14 @@ bool informationalSocketsAreAvaliable() =>
     (config["MaxSocketsPort"] != null && config["MinSocketsPort"] != null);
 
 bool portOpen(int port) {
+  //print("test: $port");
   final ptp =
       Process.runSync("nc", ["-z", config["BindAddress"]!, port.toString()]);
+  //print(ptp.exitCode);
   if (ptp.exitCode == 0) {
-    return true;
+    return false;
   }
-  return false;
+  return true;
 }
 
 int? getFirstOpenPort(int max, int min) {
@@ -38,6 +42,8 @@ Future<ServerSocket?> getOpenSocket() async {
 
   final port = getFirstOpenPort(int.parse(config["MaxSocketsPort"]!),
       int.parse(config["MinSocketsPort"]!));
+
+  print(port);
 
   if (port == null) {
     return null; // No open ports.
