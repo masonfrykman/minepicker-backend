@@ -43,8 +43,6 @@ Future<ServerSocket?> getOpenSocket() async {
   final port = getFirstOpenPort(int.parse(config["MaxSocketsPort"]!),
       int.parse(config["MinSocketsPort"]!));
 
-  print(port);
-
   if (port == null) {
     return null; // No open ports.
   }

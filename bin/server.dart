@@ -176,16 +176,13 @@ void main(List<String> args) async {
   registerLongTermTimers();
   registerSignalListeners();
 
-  print("\n\nOpening server status port...");
+  print("\n\nOpening server status socket server...");
   final assignedServerSocket = await getOpenSocket();
   if (assignedServerSocket != null) {
     serverStatusSocket = SocketServerManager(assignedServerSocket);
     serverStatusSocket!.start();
     print(
         "Done! Running at ${assignedServerSocket.address.address}:${assignedServerSocket.port}");
-    serverStatusSocket!.consumerInputProcessor = (List<int> msg) {
-      print(msg);
-    };
   } else {
     print("Something went wrong getting an avaliable socket!");
   }
