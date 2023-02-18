@@ -17,7 +17,7 @@ Future<void> _genericExit() async {
   if (taps == 3) {
     exit(0);
   }
-  if (taps > 0) {
+  if (taps > 1) {
     print("Already exiting. Hit ^C a ${3 - taps} more time(s) for force quit.");
     return;
   }
