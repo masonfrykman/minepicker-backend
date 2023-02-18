@@ -109,7 +109,8 @@ bool changePassword(String username, String oldPassword, String newPassword) {
       return false;
     }
   } else {
-    if (!DBCrypt().checkpw(oldPassword, selection.first['password'])) {
+    if (!DBCrypt().checkpw(oldPassword,
+        selection.first['password'].toString().replaceFirst("dbhash::", ""))) {
       print("Incorrect.");
       return false;
     }
@@ -118,7 +119,7 @@ bool changePassword(String username, String oldPassword, String newPassword) {
   // Hash new password
 
   final salt = DBCrypt().gensalt();
-  final hash = DBCrypt().hashpw(selection.first['password'], salt);
+  final hash = DBCrypt().hashpw(newPassword, salt);
 
   final hashfin = "dbhash::$hash";
 
