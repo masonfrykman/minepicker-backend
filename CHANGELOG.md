@@ -6,6 +6,7 @@ COMPATIBILITY: tbd
 
 - Added locked-down file management. (Requires 1.1.1)
 - Server now gracefully exits & saves the manifest on SIGINT & SIGTERM.
+- Server now opens a socket for live updates of instance & server status.
 - Cached versions list now refreshes every 3 days.
 - Combined unauth & auth instance info handler into /instance/<uuid>/info.
 - Passwords are now stored hashed & automatically migrates the database on start.

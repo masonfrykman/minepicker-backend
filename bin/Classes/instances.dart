@@ -68,10 +68,7 @@ class InstanceManager {
   }
 
   bool portTest(int port) {
-    if (!portOpen(port)) {
-      return true;
-    }
-    return false;
+    return portOpen(port);
   }
 
   void deregister(World world) {
@@ -116,9 +113,12 @@ class InstanceManager {
   }
 
   bool safelyPushWorld(World world) {
+    print("sp - slurps");
     if (getWorldByUUID(world.uuid) != null) {
+      print("1");
       return false;
     }
+    print('2');
     _worlds.add(world);
     return true;
   }

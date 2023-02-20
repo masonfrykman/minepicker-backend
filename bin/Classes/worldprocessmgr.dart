@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 
+import '../Helpers/sockets/server_status_socket.dart';
 import 'advert_mgr.dart';
 import 'instances.dart';
 import 'world.dart';
@@ -25,6 +26,8 @@ class WorldProcessManager {
   Future<void> start(
       {bool wantsStatic = false, bool wantsAdvert = false}) async {
     status = WorldProcessStatus.starting;
+    updateStatusWithEventCode(StatusEventCode.instanceStarting,
+        instanceUUID: parent.uuid);
     if (process != null) {
       process!.kill(ProcessSignal.sigkill);
     }
@@ -58,6 +61,8 @@ class WorldProcessManager {
       onDone: () async {
         print("STDOUT for ${parent.uuid} is closing!");
         status = WorldProcessStatus.stopped;
+        updateStatusWithEventCode(StatusEventCode.instanceStop,
+            instanceUUID: parent.uuid);
       },
     );
     process!.stderr.listen(
@@ -116,6 +121,8 @@ class WorldProcessManager {
       }
       process = null;
       status = WorldProcessStatus.stopped;
+      updateStatusWithEventCode(StatusEventCode.instanceStop,
+          instanceUUID: parent.uuid);
     });
   }
 
@@ -145,9 +152,13 @@ class WorldProcessManager {
     if (ln.contains("Done") && ln.contains("For help")) {
       // Server finish
       status = WorldProcessStatus.running;
+      updateStatusWithEventCode(StatusEventCode.instanceStart,
+          instanceUUID: parent.uuid);
       print("WPM for ${parent.uuid}: Detected server start finish");
     } else if (ln.contains("Encountered an unexpected exception")) {
       status = WorldProcessStatus.stopped;
+      updateStatusWithEventCode(StatusEventCode.instanceStop,
+          instanceUUID: parent.uuid);
       if (process != null) {
         process!.kill(ProcessSignal.sigkill);
         process = null;
@@ -155,6 +166,8 @@ class WorldProcessManager {
     } else if (ln.contains("Stopping the server")) {
       // Server stopping
       status = WorldProcessStatus.stopped;
+      updateStatusWithEventCode(StatusEventCode.instanceStop,
+          instanceUUID: parent.uuid);
       print("WPM for ${parent.uuid}: Detected stopping server.");
       delayedCleanup();
     } else if (ln.contains("joined the game")) {
@@ -183,6 +196,8 @@ class WorldProcessManager {
       MulticastAdvertManager.shared.remove(runningAt!);
     }
     status = WorldProcessStatus.stopped;
+    updateStatusWithEventCode(StatusEventCode.instanceStop,
+        instanceUUID: parent.uuid);
     runningAt = null;
     if (procSocket != null) {
       procSocket!.close().then((value) {

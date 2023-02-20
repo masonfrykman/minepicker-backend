@@ -64,10 +64,13 @@ class World {
   }
 
   Future<void> createInstance() async {
+    print("10");
     instanceDirectory ??= inferInstanceDirectory(replaceVariable: false);
 
+    print("20");
     await Directory(instanceDirectory!).create(recursive: true);
 
+    print("30");
     // Verify cache exists & can exist.
     if (!isCached(serverVersion)) {
       if (!await canBeCached(serverVersion)) {
@@ -83,6 +86,8 @@ class World {
       }
     }
 
+    print("40");
+
     final cacheDir = getCacheDirectory(serverVersion);
     if (cacheDir == null) {
       throw InstanceCreationFailure(
@@ -90,20 +95,28 @@ class World {
           instanceDirectory);
     }
 
+    print("50");
+
     // Copy cache directory to instance directory.
     await copyPath(cacheDir, instanceDirectory!);
 
+    print("60");
+
     // Create server.properties
     await createServerProperties();
+
+    print("70");
   }
 
   Future<int> createServerProperties({bool wantsStatic = false}) async {
+    print("hoe");
     final Map<String, dynamic> serverProperties = {};
 
     if (serverPropertiesFileMixins != null) {
       serverProperties.addAll(serverPropertiesFileMixins!);
     }
 
+    print("bag");
     int port = -1;
     while (true) {
       var generatePortNumber =
@@ -116,6 +129,7 @@ class World {
       break;
     }
 
+    print("beep");
     serverProperties.addAll({
       'enable-query': 'true',
       'broadcast-console-to-ops': 'false',
@@ -125,16 +139,21 @@ class World {
       'server-port': port,
       'query.port': port
     });
+    print("boob");
 
     final servDotPropFile =
         File("$instanceDirectory/server.properties").openWrite();
+
+    print('beep');
 
     serverProperties.forEach((key, value) {
       servDotPropFile.writeln("$key=$value");
     });
 
+    print("beeps");
     servDotPropFile.flush().then((value) => {servDotPropFile.close()});
 
+    print('doops');
     return port;
   }
 

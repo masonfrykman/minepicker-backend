@@ -57,16 +57,21 @@ Future<Response> createInstance(Request req) async {
   }
 
   final checkIfVersionIsCached = isCached(worldparams["version"]!);
+  print("goursh");
   if (!checkIfVersionIsCached) {
     final doCache = await createCache(worldparams["version"]!);
+    print("hi");
     if (!doCache) {
       return Response.internalServerError(body: "Failed to create cache.");
     }
   }
 
   // Make World object
+  print("hah");
   var worldObject =
       World.full(worldparams["name"]!, worldparams["version"]!, null);
+
+  print("hoo");
 
   if (worldparams.containsKey("backup-frequency")) {
     worldObject.backupFrequency =
@@ -84,17 +89,29 @@ Future<Response> createInstance(Request req) async {
             "Maximum memory value cannot be less than or equal to minimum memory value.");
   }
 
-  worldObject.inferInstanceDirectory(onlyReplaceIfNull: false);
+  print("boi");
+
+  worldObject.inferInstanceDirectory(onlyReplaceIfNull: true);
+
+  print("slurp");
 
   try {
     await worldObject.createInstance();
   } catch (err) {
+    print(err);
     return Response.internalServerError(
         body: "An error occured creating the instance on disk.");
   }
 
+  print("slarp");
+
   InstanceManager.shared.safelyPushWorld(worldObject);
+
+  print('carp');
+
   await InstanceManager.shared.dumpWorldsToManifest();
+
+  print('harp');
 
   return Response.ok(JsonEncoder().convert(worldObject),
       headers: {"Content-Type": "application/json"});
