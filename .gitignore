@@ -9,3 +9,5 @@ android/
 env/
 
 .DS_Store
+
+.dart_tool/
