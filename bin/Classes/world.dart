@@ -13,6 +13,7 @@ class World {
   late String name;
   late String uuid; // Should ALWAYS be assigned by server.
   late String serverVersion;
+  late String owner;
   int? backupFrequency; // backup-freq-days in JSON.
   String? instanceDirectory; // absolute-path in JSON. No opt in create.
 
@@ -42,6 +43,7 @@ class World {
         'name': name,
         'version': serverVersion,
         'uuid': uuid,
+        'owner': owner,
         'backup-freq-days': backupFrequency,
         'absolute-path': instanceDirectory,
         'memory-max-mb': maximumMemory,
@@ -64,13 +66,10 @@ class World {
   }
 
   Future<void> createInstance() async {
-    print("10");
     instanceDirectory ??= inferInstanceDirectory(replaceVariable: false);
 
-    print("20");
     await Directory(instanceDirectory!).create(recursive: true);
 
-    print("30");
     // Verify cache exists & can exist.
     if (!isCached(serverVersion)) {
       if (!await canBeCached(serverVersion)) {
@@ -86,8 +85,6 @@ class World {
       }
     }
 
-    print("40");
-
     final cacheDir = getCacheDirectory(serverVersion);
     if (cacheDir == null) {
       throw InstanceCreationFailure(
@@ -95,28 +92,20 @@ class World {
           instanceDirectory);
     }
 
-    print("50");
-
     // Copy cache directory to instance directory.
     await copyPath(cacheDir, instanceDirectory!);
 
-    print("60");
-
     // Create server.properties
     await createServerProperties();
-
-    print("70");
   }
 
   Future<int> createServerProperties({bool wantsStatic = false}) async {
-    print("hoe");
     final Map<String, dynamic> serverProperties = {};
 
     if (serverPropertiesFileMixins != null) {
       serverProperties.addAll(serverPropertiesFileMixins!);
     }
 
-    print("bag");
     int port = -1;
     while (true) {
       var generatePortNumber =
@@ -129,7 +118,6 @@ class World {
       break;
     }
 
-    print("beep");
     serverProperties.addAll({
       'enable-query': 'true',
       'broadcast-console-to-ops': 'false',
@@ -139,21 +127,16 @@ class World {
       'server-port': port,
       'query.port': port
     });
-    print("boob");
 
     final servDotPropFile =
         File("$instanceDirectory/server.properties").openWrite();
-
-    print('beep');
 
     serverProperties.forEach((key, value) {
       servDotPropFile.writeln("$key=$value");
     });
 
-    print("beeps");
     servDotPropFile.flush().then((value) => {servDotPropFile.close()});
 
-    print('doops');
     return port;
   }
 
@@ -172,14 +155,12 @@ class World {
     serverPropertiesFileMixins!.remove(key);
   }
 
-  // Initializers
-  World(this.name) {
-    uuid = Uuid().v4();
-    processManager = WorldProcessManager(this);
-  }
-
-  World.full(this.name, this.serverVersion, this.instanceDirectory,
-      {this.executable,
+  World.full(
+      {required this.name,
+      required this.serverVersion,
+      required this.instanceDirectory,
+      required this.owner,
+      this.executable,
       this.maximumMemory,
       this.minimumMemory,
       this.backupFrequency}) {
@@ -196,6 +177,17 @@ class World {
         json["uuid"] == null ||
         json["version"] == null) {
       throw Exception("Required value name, uuid, and/or version was null.");
+    }
+
+    // Handle missing ownership of instance.
+    if (json["owner"] == null) {
+      // Likely a world created before instance ownership was introduced.
+      // In this case, assign the world the "lost+found" owner.
+      print(
+          "WARNING: Instance with uuid '${json["uuid"]}' has no assigned owner. The instance is being assigned to the user 'lost+found'.");
+      owner = "lost+found";
+    } else {
+      owner = json[owner];
     }
 
     name = json["name"];

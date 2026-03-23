@@ -37,11 +37,9 @@ Response restoreInstanceHandler(Request req, String uuid) {
   return Response.internalServerError(body: "Unknown error occured.");
 }
 
-// Create instance
 Future<Response> createInstance(Request req) async {
   // Get world parameters
-  final body = await req.readAsString();
-  final worldparams = httpBodyToMap(body);
+  final worldparams = httpBodyToMap(await req.readAsString());
 
   if (!worldparams.containsKey("version") || !worldparams.containsKey("name")) {
     return Response.badRequest(
@@ -49,29 +47,25 @@ Future<Response> createInstance(Request req) async {
   }
 
   // Create cache if not avaliable.
-  final checkValidVersion = await canBeCached(worldparams["version"]!);
-  if (!checkValidVersion) {
+  if (!(await canBeCached(worldparams["version"]!))) {
     return Response.badRequest(
         body:
             "Cannot create instance with version '${worldparams["version"]!}'. Refresh the cache and try again.");
   }
 
-  final checkIfVersionIsCached = isCached(worldparams["version"]!);
-  print("goursh");
-  if (!checkIfVersionIsCached) {
+  if (!isCached(worldparams["version"]!)) {
     final doCache = await createCache(worldparams["version"]!);
-    print("hi");
     if (!doCache) {
       return Response.internalServerError(body: "Failed to create cache.");
     }
   }
 
   // Make World object
-  print("hah");
-  var worldObject =
-      World.full(worldparams["name"]!, worldparams["version"]!, null);
-
-  print("hoo");
+  var worldObject = World.full(
+      name: worldparams["name"]!,
+      serverVersion: worldparams["version"]!,
+      instanceDirectory: null,
+      owner: req.headers["X-Username"]!);
 
   if (worldparams.containsKey("backup-frequency")) {
     worldObject.backupFrequency =
@@ -89,11 +83,7 @@ Future<Response> createInstance(Request req) async {
             "Maximum memory value cannot be less than or equal to minimum memory value.");
   }
 
-  print("boi");
-
   worldObject.inferInstanceDirectory(onlyReplaceIfNull: true);
-
-  print("slurp");
 
   try {
     await worldObject.createInstance();
@@ -103,15 +93,8 @@ Future<Response> createInstance(Request req) async {
         body: "An error occured creating the instance on disk.");
   }
 
-  print("slarp");
-
   InstanceManager.shared.safelyPushWorld(worldObject);
-
-  print('carp');
-
   await InstanceManager.shared.dumpWorldsToManifest();
-
-  print('harp');
 
   return Response.ok(JsonEncoder().convert(worldObject),
       headers: {"Content-Type": "application/json"});
