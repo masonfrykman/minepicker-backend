@@ -1,8 +1,8 @@
 import 'package:shelf/shelf.dart';
 
 const versionName = "1.1.0";
-const versionDate = "In Development";
-const versionCompatibility = "1.0.2 - 1.1.0";
+const versionDate = "February 20, 2023";
+const versionCompatibility = "1.2.0";
 
 Response version(Request req) {
   return Response.ok(versionName);
@@ -13,5 +13,5 @@ Response vDate(Request req) {
 }
 
 Response madeFor(Request req) {
-  return Response.ok("Compatible with $versionCompatibility");
+  return Response.ok("For client $versionCompatibility");
 }

@@ -2,9 +2,7 @@
 
 ## 1.1.0
 
-COMPATIBILITY: tbd
-
-- Added locked-down file management. (Requires 1.1.1)
+- Added locked-down file management.
 - Server now gracefully exits & saves the manifest on SIGINT & SIGTERM.
 - Server now opens a socket for live updates of instance & server status.
 - Cached versions list now refreshes every 3 days.
